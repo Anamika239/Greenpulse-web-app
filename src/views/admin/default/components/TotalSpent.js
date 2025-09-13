@@ -19,12 +19,12 @@ import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
 } from "variables/charts";
+import { useCarbon } from "contexts/CarbonContext";
 
 export default function TotalSpent(props) {
   const { ...rest } = props;
 
   // Chakra Color Mode
-
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -38,6 +38,10 @@ export default function TotalSpent(props) {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
+
+  // Carbon data context
+  const { getEnergyConsumptionData } = useCarbon();
+  const energyData = getEnergyConsumptionData();
   return (
     <Card
       justifyContent='center'
@@ -86,7 +90,7 @@ export default function TotalSpent(props) {
             textAlign='start'
             fontWeight='700'
             lineHeight='100%'>
-            2,847 kWh
+            {energyData.current.toLocaleString()} kWh
           </Text>
           <Flex align='center' mb='20px'>
             <Text

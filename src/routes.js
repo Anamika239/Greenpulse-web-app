@@ -5,6 +5,7 @@ import {
   MdPerson,
   MdForest,
   MdPublic,
+  MdEmojiEvents,
 } from 'react-icons/md';
 
 // Use folder names—these will use the index.jsx in each folder
@@ -13,6 +14,7 @@ import MainDashboard from 'views/admin/default';
 import DataTables from 'views/admin/dataTables';
 import Profile from 'views/admin/profile';
 import RTL from 'views/admin/rtl';
+import Leaderboard from 'views/admin/leaderboard';
 
 
 const routes = [
@@ -26,8 +28,8 @@ const routes = [
   {
     name: 'Emissions Data',
     layout: '/admin',
-    icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
     path: '/emissions-data',
+    icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
     component: <DataTables />,
   },
   {
@@ -38,9 +40,16 @@ const routes = [
     component: <Profile />,
   },
   {
+    name: 'Leaderboard',
+    layout: '/admin',
+    path: '/leaderboard',
+    icon: <Icon as={MdEmojiEvents} width="20px" height="20px" color="inherit" />,
+    component: <Leaderboard />,
+  },
+  {
     name: 'Wallet',
-    layout: '/rtl',
-    path: '/rtl-dashboard',
+    layout: '/admin',
+    path: '/wallet',
     icon: <Icon as={MdPublic} width="20px" height="20px" color="inherit" />,
     component: <RTL />,
   },

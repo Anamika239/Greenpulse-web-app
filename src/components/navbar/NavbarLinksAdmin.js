@@ -13,7 +13,6 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 // Custom Components
-import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from 'components/sidebar/Sidebar';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -35,6 +34,11 @@ export default function HeaderLinks(props) {
     
     // Redirect to sign in page
     navigate('/auth/sign-in');
+  };
+
+  // Handle profile settings navigation
+  const handleProfileSettings = () => {
+    navigate('/admin/profile');
   };
   // Chakra Color Mode
   const navbarIcon = useColorModeValue('gray.400', 'white');
@@ -59,16 +63,6 @@ export default function HeaderLinks(props) {
       borderRadius="30px"
       boxShadow={shadow}
     >
-      <SearchBar
-        mb={() => {
-          if (secondary) {
-            return { base: '10px', md: 'unset' };
-          }
-          return 'unset';
-        }}
-        me="10px"
-        borderRadius="30px"
-      />
       <Flex
         bg={ethBg}
         display={secondary ? 'flex' : 'none'}
@@ -165,16 +159,9 @@ export default function HeaderLinks(props) {
               _focus={{ bg: 'none' }}
               borderRadius="8px"
               px="14px"
+              onClick={handleProfileSettings}
             >
               <Text fontSize="sm">Profile Settings</Text>
-            </MenuItem>
-            <MenuItem
-              _hover={{ bg: 'none' }}
-              _focus={{ bg: 'none' }}
-              borderRadius="8px"
-              px="14px"
-            >
-              <Text fontSize="sm">Newsletter Settings</Text>
             </MenuItem>
             <MenuItem
               _hover={{ bg: 'none' }}

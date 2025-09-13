@@ -8,6 +8,7 @@ import {
   Icon,
   Select,
   SimpleGrid,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 // import Earth from "assets/img/dashboards/usa.png"; // Could represent carbon market or simply keep as is
@@ -21,6 +22,7 @@ import {
   MdBarChart,
   MdFileCopy,
 } from "react-icons/md";
+import { useCarbon } from "contexts/CarbonContext";
 import CheckTable from "views/admin/default/components/CheckTable";
 import ComplexTable from "views/admin/default/components/ComplexTable";
 import DailyTraffic from "views/admin/default/components/DailyTraffic";
@@ -39,6 +41,23 @@ export default function CarbonDeptDashboard() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("green.400", "white");
   const boxBg = useColorModeValue("green.50", "whiteAlpha.100"); // subtle green background for cards
+  
+  // Carbon data context
+  const { dashboardData, loading } = useCarbon();
+  
+  // Use real data or fallback to defaults
+  const co2Savings = dashboardData?.co2Savings ?? 350.4;
+  const carbonBudgetUsed = dashboardData?.carbonBudgetUsed ?? 642.39;
+  const walletBalance = dashboardData?.walletBalance ?? 1000;
+
+  // Show loading state if data is not available
+  if (loading && !dashboardData) {
+    return (
+      <Box pt={{ base: "130px", md: "80px", xl: "80px" }} textAlign="center">
+        <Text fontSize="lg" color="gray.600">Loading dashboard data...</Text>
+      </Box>
+    );
+  }
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -59,7 +78,7 @@ export default function CarbonDeptDashboard() {
             />
           }
           name="CO₂ Savings (tonnes)"
-          value="350.4"
+          value={co2Savings.toFixed(1)}
         />
         <CarbonMiniStats
           startContent={
@@ -73,7 +92,7 @@ export default function CarbonDeptDashboard() {
             />
           }
           name="Carbon Budget Used (this month)"
-          value="642.39 ENTO"
+          value={`${carbonBudgetUsed.toFixed(2)} ENTO`}
         />
         <CarbonMiniStats growth="+23%" name="Offsets Purchased" value="574.34" />
         <CarbonMiniStats
@@ -94,7 +113,7 @@ export default function CarbonDeptDashboard() {
             </Flex>
           }
           name="Carbon Wallet Balance"
-          value="1,000 Ento"
+          value={`${walletBalance.toLocaleString()} ENTO`}
         />
         <CarbonMiniStats
           startContent={
