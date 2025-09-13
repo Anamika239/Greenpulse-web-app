@@ -25,7 +25,37 @@ class CarbonDataService {
       }
       
       if (!localStorage.getItem(this.STORAGE_KEYS.TRANSACTIONS)) {
-        this.setTransactions([]);
+        // Initialize with sample blockchain transactions
+        const sampleTransactions = [
+          {
+            id: Date.now() - 86400000,
+            timestamp: new Date(Date.now() - 86400000).toISOString(),
+            type: 'energy_consumption',
+            amount: 150.5,
+            description: 'Energy consumption in Computer Science Dept',
+            building: 'Computer Science Dept',
+            blockchainTxHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+          },
+          {
+            id: Date.now() - 172800000,
+            timestamp: new Date(Date.now() - 172800000).toISOString(),
+            type: 'carbon_offset_purchase',
+            amount: 500.0,
+            description: 'Carbon offset purchase - Renewable Energy',
+            building: 'N/A',
+            blockchainTxHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+          },
+          {
+            id: Date.now() - 259200000,
+            timestamp: new Date(Date.now() - 259200000).toISOString(),
+            type: 'credit',
+            amount: 1000.0,
+            description: 'Wallet top-up',
+            building: 'N/A',
+            blockchainTxHash: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba'
+          }
+        ];
+        this.setTransactions(sampleTransactions);
       }
       
       if (!localStorage.getItem(this.STORAGE_KEYS.CO2_SAVINGS)) {
@@ -215,15 +245,34 @@ class CarbonDataService {
 
   // Energy Consumption Data for Charts
   getEnergyConsumptionData() {
+    const current = this.getEnergyConsumption();
+    const monthly = [2850, 3200, 2800, 3100, 2900, current];
+    const efficiency = [85, 88, 82, 90, 87, Math.round((current / 3200) * 100)];
+    
     return {
-      current: this.getEnergyConsumption(),
-      monthly: [2850, 3200, 2800, 3100, 2900, 2847],
-      efficiency: [85, 88, 82, 90, 87, 92],
+      current,
+      monthly,
+      efficiency,
       buildings: {
-        'Building A': 35,
-        'Building B': 28,
-        'Building C': 22,
-        'Building D': 15
+        'Computer Science Dept': 18,
+        'Engineering Dept': 22,
+        'Business School': 15,
+        'Medical School': 20,
+        'Arts & Humanities': 12,
+        'Science Lab Complex': 25,
+        'Library & Research Center': 18,
+        'Student Dormitories': 16,
+        'Administrative Building': 10,
+        'Sports Complex': 8
+      },
+      weekly: {
+        'Monday': 420,
+        'Tuesday': 380,
+        'Wednesday': 450,
+        'Thursday': 390,
+        'Friday': 410,
+        'Saturday': 430,
+        'Sunday': 400
       }
     };
   }

@@ -3,9 +3,9 @@ import { Box, Flex, Text, Select, useColorModeValue } from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/CarbonCard.js";
 import PieChart from "components/charts/PieChart";
-import { pieChartData, pieChartOptions } from "variables/charts";
-import { VSeparator } from "components/separator/Separator";
+import { pieChartOptions } from "variables/charts";
 import React from "react";
+import { useDepartment } from "contexts/DepartmentContext";
 
 export default function Conversion(props) {
   const { ...rest } = props;
@@ -17,6 +17,25 @@ export default function Conversion(props) {
     "0px 18px 40px rgba(112, 144, 176, 0.12)",
     "unset"
   );
+
+  // Department data context
+  const { getEnergyConsumptionByDepartment } = useDepartment();
+  const departmentData = getEnergyConsumptionByDepartment();
+
+  // Calculate department energy usage percentages
+  const totalEnergy = departmentData.reduce((sum, dept) => sum + dept.consumption, 0);
+  const departmentPercentages = departmentData.map(dept => ({
+    building: dept.name,
+    energy: dept.consumption,
+    percentage: Math.round((dept.consumption / totalEnergy) * 100),
+    efficiency: dept.efficiency,
+    color: dept.color
+  }));
+
+  // Generate pie chart data
+  const pieData = departmentPercentages.map(item => item.percentage);
+  const pieLabels = departmentPercentages.map(item => item.building);
+
   return (
     <Card p='20px' align='center' direction='column' w='100%' {...rest}>
       <Flex
@@ -26,7 +45,7 @@ export default function Conversion(props) {
         w='100%'
         mb='8px'>
         <Text color={textColor} fontSize='md' fontWeight='600' mt='4px'>
-          Building Energy Usage
+          Department Energy Usage (This Month)
         </Text>
         <Select
           fontSize='sm'
@@ -43,8 +62,11 @@ export default function Conversion(props) {
       <PieChart
         h='100%'
         w='100%'
-        chartData={pieChartData}
-        chartOptions={pieChartOptions}
+        chartData={pieData}
+        chartOptions={{
+          ...pieChartOptions,
+          labels: pieLabels
+        }}
       />
       <Card
         bg={cardColor}
@@ -56,66 +78,32 @@ export default function Conversion(props) {
         mt='15px'
         mx='auto'>
         <Flex direction='row' wrap='wrap' justify='space-between' align='center'>
-          <Flex direction='column' py='5px' minW='120px'>
-            <Flex align='center'>
-              <Box h='8px' w='8px' bg='brand.500' borderRadius='50%' me='4px' />
-              <Text
-                fontSize='xs'
-                color='secondaryGray.600'
-                fontWeight='700'
-                mb='5px'>
-                Building A
-              </Text>
-            </Flex>
-            <Text fontSize='lg' color={textColor} fontWeight='700'>
-              35%
-            </Text>
-          </Flex>
-          <Flex direction='column' py='5px' minW='120px'>
-            <Flex align='center'>
-              <Box h='8px' w='8px' bg='#6AD2FF' borderRadius='50%' me='4px' />
-              <Text
-                fontSize='xs'
-                color='secondaryGray.600'
-                fontWeight='700'
-                mb='5px'>
-                Building B
-              </Text>
-            </Flex>
-            <Text fontSize='lg' color={textColor} fontWeight='700'>
-              28%
-            </Text>
-          </Flex>
-          <Flex direction='column' py='5px' minW='120px'>
-            <Flex align='center'>
-              <Box h='8px' w='8px' bg='#EFF4FB' borderRadius='50%' me='4px' />
-              <Text
-                fontSize='xs'
-                color='secondaryGray.600'
-                fontWeight='700'
-                mb='5px'>
-                Building C
-              </Text>
-            </Flex>
-            <Text fontSize='lg' color={textColor} fontWeight='700'>
-              22%
-            </Text>
-          </Flex>
-          <Flex direction='column' py='5px' minW='120px'>
-            <Flex align='center'>
-              <Box h='8px' w='8px' bg='#FF6B6B' borderRadius='50%' me='4px' />
-              <Text
-                fontSize='xs'
-                color='secondaryGray.600'
-                fontWeight='700'
-                mb='5px'>
-                Building D
-              </Text>
-            </Flex>
-            <Text fontSize='lg' color={textColor} fontWeight='700'>
-              15%
-            </Text>
-          </Flex>
+          {departmentPercentages.map((item, index) => {
+            return (
+              <Flex key={item.building} direction='column' py='5px' minW='140px' maxW='180px'>
+                <Flex align='center'>
+                  <Box h='8px' w='8px' bg={item.color} borderRadius='50%' me='4px' />
+                  <Text
+                    fontSize='xs'
+                    color='secondaryGray.600'
+                    fontWeight='700'
+                    mb='5px'
+                    noOfLines={2}>
+                    {item.building}
+                  </Text>
+                </Flex>
+                <Text fontSize='lg' color={textColor} fontWeight='700'>
+                  {item.percentage}%
+                </Text>
+                <Text fontSize='xs' color='secondaryGray.500'>
+                  {item.energy} kWh
+                </Text>
+                <Text fontSize='xs' color={item.efficiency >= 90 ? 'green.500' : item.efficiency >= 70 ? 'orange.500' : 'red.500'}>
+                  {item.efficiency}% efficient
+                </Text>
+              </Flex>
+            );
+          })}
         </Flex>
       </Card>
     </Card>

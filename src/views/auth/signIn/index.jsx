@@ -21,9 +21,12 @@ import illustration from "assets/img/auth/auth.png";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
+import InstituteSelector from "components/institute/InstituteSelector";
+import { useInstitute } from "contexts/InstituteContext";
 
 function SignIn() {
   const navigate = useNavigate();
+  const { currentInstitute } = useInstitute();
 
   // Chakra color mode
   const textColor = useColorModeValue("navy.700", "white");
@@ -49,7 +52,11 @@ function SignIn() {
     event.preventDefault();
     // Add authentication logic here (API call, validation, etc.)
     // On successful sign in, redirect:
-    navigate('/admin/dashboard');
+    if (currentInstitute) {
+      navigate('/admin/dashboard');
+    } else {
+      alert('Please select an institute first');
+    }
   };
 
   return (
@@ -116,6 +123,22 @@ function SignIn() {
             </Text>
             <HSeparator />
           </Flex>
+          
+          {/* Institute Selection */}
+          <Box mb="25px">
+            <FormLabel
+              display="flex"
+              ms="4px"
+              fontSize="sm"
+              fontWeight="500"
+              color={textColor}
+              mb="8px"
+            >
+              Institute<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <InstituteSelector />
+          </Box>
+          
           {/* FORM STARTS HERE */}
           <form onSubmit={handleSignIn}>
             <FormControl>

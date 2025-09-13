@@ -1,333 +1,310 @@
-import React from 'react';
 import {
   Box,
   Text,
+  Button,
+  Icon,
   useColorModeValue,
+  SimpleGrid,
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  Badge,
   VStack,
   HStack,
-  Icon,
-  Badge,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Flex,
-  Button,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Select,
-  Spinner,
-  Center
-} from '@chakra-ui/react';
+  Progress,
+} from "@chakra-ui/react";
+import React from "react";
 import {
-  MdSearch,
-  MdFilterList,
-  MdDownload,
+  MdBatteryChargingFull,
+  MdAttachMoney,
+  MdSchedule,
+  MdBuild,
+  MdAdd,
+  MdPayment,
   MdRefresh,
-  MdAccountBalanceWallet,
-  MdTrendingUp,
-  MdTrendingDown,
-  MdSwapHoriz,
-  MdContentCopy,
-  MdCheckCircle
-} from 'react-icons/md';
-import { useCarbon } from 'contexts/CarbonContext';
-import { useState } from 'react';
+  MdSettings,
+} from "react-icons/md";
 
-const WalletLedger = () => {
-  const { dashboardData } = useCarbon();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('all');
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // Chakra Color Mode
-  const textColor = useColorModeValue('secondaryGray.900', 'white');
-  const textColorSecondary = useColorModeValue('secondaryGray.600', 'white');
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-  const bgColor = useColorModeValue('white', 'navy.800');
-  const hoverColor = useColorModeValue('gray.50', 'whiteAlpha.50');
-
-  const transactions = dashboardData?.transactions || [];
-
-  // Filter transactions based on search and type
-  const filteredTransactions = transactions.filter(transaction => {
-    const matchesSearch = transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         transaction.txHash?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = filterType === 'all' || transaction.type === filterType;
-    return matchesSearch && matchesType;
-  });
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    // Simulate refresh delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsRefreshing(false);
-  };
-
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-  };
-
-  const getTransactionIcon = (type) => {
-    switch (type) {
-      case 'energy_consumption':
-        return <Icon as={MdTrendingUp} color="red.500" />;
-      case 'carbon_offset':
-        return <Icon as={MdTrendingDown} color="green.500" />;
-      case 'credit':
-        return <Icon as={MdSwapHoriz} color="blue.500" />;
-      default:
-        return <Icon as={MdAccountBalanceWallet} color="gray.500" />;
-    }
-  };
-
-  const getTransactionColor = (type) => {
-    switch (type) {
-      case 'energy_consumption':
-        return 'red.500';
-      case 'carbon_offset':
-        return 'green.500';
-      case 'credit':
-        return 'blue.500';
-      default:
-        return 'gray.500';
-    }
-  };
-
-  const formatAmount = (amount, type) => {
-    const sign = type === 'energy_consumption' ? '+' : '-';
-    return `${sign}${Math.abs(amount).toLocaleString()}`;
-  };
-
-  const formatDate = (timestamp) => {
-    return new Date(timestamp).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+// Energy Pack Card Component
+const EnergyPackCard = () => {
+  const cardBg = useColorModeValue("white", "navy.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textColor = useColorModeValue("navy.700", "white");
+  const textColorSecondary = useColorModeValue("gray.500", "gray.400");
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <VStack spacing={6} align="stretch">
-        {/* Header */}
-        <Flex justify="space-between" align="center" wrap="wrap" gap={4}>
-          <VStack align="start" spacing={1}>
-            <Text fontSize="2xl" fontWeight="bold" color={textColor}>
-              Wallet Ledger
-            </Text>
-            <Text fontSize="md" color={textColorSecondary}>
-              Complete blockchain transaction history
-            </Text>
-          </VStack>
-          
-          <HStack spacing={3}>
-            <Button
-              leftIcon={<Icon as={MdRefresh} />}
-              onClick={handleRefresh}
-              isLoading={isRefreshing}
-              size="sm"
-              variant="outline"
-            >
-              Refresh
-            </Button>
-            <Button
-              leftIcon={<Icon as={MdDownload} />}
-              size="sm"
-              variant="outline"
-            >
-              Export
-            </Button>
-          </HStack>
-        </Flex>
-
-        {/* Filters */}
-        <Flex gap={4} wrap="wrap" align="center">
-          <InputGroup maxW="300px">
-            <InputLeftElement>
-              <Icon as={MdSearch} color="gray.400" />
-            </InputLeftElement>
-            <Input
-              placeholder="Search transactions..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </InputGroup>
-          
-          <Select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            maxW="200px"
-          >
-            <option value="all">All Types</option>
-            <option value="energy_consumption">Energy Consumption</option>
-            <option value="carbon_offset">Carbon Offset</option>
-            <option value="credit">Credit</option>
-          </Select>
-        </Flex>
-
-        {/* Transactions Table */}
-        <Box
-          bg={bgColor}
-          borderRadius="xl"
-          border="1px solid"
-          borderColor={borderColor}
-          overflow="hidden"
-          boxShadow="sm"
-        >
-          <TableContainer>
-            <Table variant="simple" size="sm">
-              <Thead bg={useColorModeValue('gray.50', 'whiteAlpha.100')}>
-                <Tr>
-                  <Th color={textColor} fontSize="sm" fontWeight="600" py={4}>
-                    Type
-                  </Th>
-                  <Th color={textColor} fontSize="sm" fontWeight="600">
-                    Amount
-                  </Th>
-                  <Th color={textColor} fontSize="sm" fontWeight="600">
-                    Transaction Hash
-                  </Th>
-                  <Th color={textColor} fontSize="sm" fontWeight="600">
-                    Description
-                  </Th>
-                  <Th color={textColor} fontSize="sm" fontWeight="600">
-                    Building
-                  </Th>
-                  <Th color={textColor} fontSize="sm" fontWeight="600">
-                    Timestamp
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {filteredTransactions.length === 0 ? (
-                  <Tr>
-                    <Td colSpan={6} textAlign="center" py={10}>
-                      <VStack spacing={2}>
-                        <Icon as={MdAccountBalanceWallet} boxSize={8} color="gray.400" />
-                        <Text color="gray.500">No transactions found</Text>
-                      </VStack>
-                    </Td>
-                  </Tr>
-                ) : (
-                  filteredTransactions.map((transaction, index) => (
-                    <Tr
-                      key={index}
-                      _hover={{ bg: hoverColor }}
-                      transition="all 0.2s"
-                    >
-                      <Td py={3}>
-                        <HStack spacing={2}>
-                          {getTransactionIcon(transaction.type)}
-                          <Badge
-                            colorScheme={transaction.type === 'energy_consumption' ? 'red' : 
-                                       transaction.type === 'carbon_offset' ? 'green' : 'blue'}
-                            variant="subtle"
-                            textTransform="capitalize"
-                          >
-                            {transaction.type?.replace('_', ' ')}
-                          </Badge>
-                        </HStack>
-                      </Td>
-                      
-                      <Td py={3}>
-                        <Text
-                          fontWeight="600"
-                          color={getTransactionColor(transaction.type)}
-                          fontSize="sm"
-                        >
-                          {formatAmount(transaction.amount, transaction.type)}
-                        </Text>
-                        <Text fontSize="xs" color={textColorSecondary}>
-                          {transaction.type === 'energy_consumption' ? 'kWh' : 'ENTO'}
-                        </Text>
-                      </Td>
-                      
-                      <Td py={3}>
-                        <HStack spacing={2}>
-                          <Text
-                            fontFamily="mono"
-                            fontSize="xs"
-                            color={textColor}
-                            maxW="120px"
-                            isTruncated
-                          >
-                            {transaction.txHash?.substring(0, 16)}...
-                          </Text>
-                          <Button
-                            size="xs"
-                            variant="ghost"
-                            onClick={() => copyToClipboard(transaction.txHash)}
-                            leftIcon={<Icon as={MdContentCopy} />}
-                          >
-                            Copy
-                          </Button>
-                        </HStack>
-                      </Td>
-                      
-                      <Td py={3}>
-                        <Text fontSize="sm" color={textColor} maxW="200px" isTruncated>
-                          {transaction.description}
-                        </Text>
-                      </Td>
-                      
-                      <Td py={3}>
-                        <Text fontSize="sm" color={textColorSecondary}>
-                          {transaction.building}
-                        </Text>
-                      </Td>
-                      
-                      <Td py={3}>
-                        <Text fontSize="sm" color={textColorSecondary}>
-                          {formatDate(transaction.timestamp)}
-                        </Text>
-                      </Td>
-                    </Tr>
-                  ))
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Box>
-
-        {/* Summary Stats */}
-        <HStack spacing={6} justify="center" wrap="wrap">
-          <VStack spacing={1}>
-            <Text fontSize="2xl" fontWeight="bold" color="red.500">
-              {transactions.filter(t => t.type === 'energy_consumption').length}
-            </Text>
-            <Text fontSize="sm" color={textColorSecondary}>
-              Energy Transactions
-            </Text>
-          </VStack>
-          
-          <VStack spacing={1}>
-            <Text fontSize="2xl" fontWeight="bold" color="green.500">
-              {transactions.filter(t => t.type === 'carbon_offset').length}
-            </Text>
-            <Text fontSize="sm" color={textColorSecondary}>
-              Offset Transactions
-            </Text>
-          </VStack>
-          
-          <VStack spacing={1}>
-            <Text fontSize="2xl" fontWeight="bold" color="blue.500">
-              {transactions.filter(t => t.type === 'credit').length}
-            </Text>
-            <Text fontSize="sm" color={textColorSecondary}>
-              Credit Transactions
-            </Text>
-          </VStack>
+    <Card bg={cardBg} borderColor={borderColor} p="30px" mb="30px">
+      <CardHeader>
+        <HStack justify="space-between" align="center">
+          <Heading size="lg" color={textColor}>
+            Current Energy Pack
+          </Heading>
+          <Badge colorScheme="green" variant="solid" px="3" py="1" borderRadius="full">
+            ACTIVE
+          </Badge>
         </HStack>
-      </VStack>
-    </Box>
+      </CardHeader>
+      <CardBody>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mb="30px">
+          <VStack spacing="2" align="center">
+            <Text color={textColorSecondary} fontSize="sm" fontWeight="medium">
+              Current Capacity
+            </Text>
+            <Text color={textColor} fontSize="3xl" fontWeight="bold">
+              75%
+            </Text>
+            <Progress value={75} colorScheme="green" size="lg" w="100%" borderRadius="full" />
+          </VStack>
+          
+          <VStack spacing="2" align="center">
+            <Text color={textColorSecondary} fontSize="sm" fontWeight="medium">
+              Remaining Energy
+            </Text>
+            <Text color={textColor} fontSize="2xl" fontWeight="bold">
+              75 kWh
+            </Text>
+            <Text color={textColorSecondary} fontSize="sm">
+              of 100 kWh total
+            </Text>
+          </VStack>
+          
+          <VStack spacing="2" align="center">
+            <Text color={textColorSecondary} fontSize="sm" fontWeight="medium">
+              Daily Usage
+            </Text>
+            <Text color={textColor} fontSize="2xl" fontWeight="bold">
+              25 kWh
+            </Text>
+            <Text color="green.500" fontSize="sm" fontWeight="bold">
+              ▲ 12% from yesterday
+            </Text>
+          </VStack>
+          
+          <VStack spacing="2" align="center">
+            <Text color={textColorSecondary} fontSize="sm" fontWeight="medium">
+              Efficiency
+            </Text>
+            <Text color={textColor} fontSize="2xl" fontWeight="bold">
+              92%
+            </Text>
+            <Text color="green.500" fontSize="sm" fontWeight="bold">
+              ▲ 2% improvement
+            </Text>
+          </VStack>
+        </SimpleGrid>
+        
+        <VStack spacing="4" align="stretch" mb="30px">
+          <HStack justify="space-between">
+            <Text color={textColorSecondary} fontSize="sm">
+              Last Charged: 2 hours ago
+            </Text>
+            <Text color={textColorSecondary} fontSize="sm">
+              Next Maintenance: 15 days
+            </Text>
+          </HStack>
+        </VStack>
+        
+        <HStack spacing="3" justify="center">
+          <Button
+            leftIcon={<Icon as={MdBatteryChargingFull} />}
+            colorScheme="green"
+            size="md"
+          >
+            + Start Charging
+          </Button>
+          <Button
+            leftIcon={<Icon as={MdSettings} />}
+            colorScheme="gray"
+            variant="outline"
+            size="md"
+          >
+            Optimize Usage
+          </Button>
+          <Button
+            leftIcon={<Icon as={MdBuild} />}
+            colorScheme="gray"
+            variant="outline"
+            size="md"
+          >
+            Schedule Maintenance
+          </Button>
+        </HStack>
+      </CardBody>
+    </Card>
   );
 };
 
-export default WalletLedger;
+// Current Loan Card Component
+const CurrentLoanCard = () => {
+  const cardBg = useColorModeValue("white", "navy.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textColor = useColorModeValue("navy.700", "white");
+  const textColorSecondary = useColorModeValue("gray.500", "gray.400");
+
+  return (
+    <Card bg={cardBg} borderColor={borderColor} p="30px" mb="30px">
+      <CardHeader>
+        <HStack justify="space-between" align="center">
+          <Heading size="lg" color={textColor}>
+            Current Loan
+          </Heading>
+          <Badge colorScheme="blue" variant="solid" px="3" py="1" borderRadius="full">
+            CURRENT
+          </Badge>
+        </HStack>
+      </CardHeader>
+      <CardBody>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mb="30px">
+          <VStack spacing="2" align="center">
+            <Text color={textColorSecondary} fontSize="sm" fontWeight="medium">
+              Remaining Balance
+            </Text>
+            <Text color={textColor} fontSize="2xl" fontWeight="bold">
+              35,000 ENTO
+            </Text>
+            <Text color={textColorSecondary} fontSize="sm">
+              of 50,000 ENTO total
+            </Text>
+          </VStack>
+          
+          <VStack spacing="2" align="center">
+            <Text color={textColorSecondary} fontSize="sm" fontWeight="medium">
+              Monthly Payment
+            </Text>
+            <Text color={textColor} fontSize="2xl" fontWeight="bold">
+              1,250 ENTO
+            </Text>
+            <Text color={textColorSecondary} fontSize="sm">
+              Due 2024-02-15
+            </Text>
+          </VStack>
+          
+          <VStack spacing="2" align="center">
+            <Text color={textColorSecondary} fontSize="sm" fontWeight="medium">
+              Interest Rate
+            </Text>
+            <Text color={textColor} fontSize="2xl" fontWeight="bold">
+              4.5%
+            </Text>
+            <Text color={textColorSecondary} fontSize="sm">
+              Annual rate
+            </Text>
+          </VStack>
+          
+          <VStack spacing="2" align="center">
+            <Text color={textColorSecondary} fontSize="sm" fontWeight="medium">
+              Remaining Payments
+            </Text>
+            <Text color={textColor} fontSize="2xl" fontWeight="bold">
+              28
+            </Text>
+            <Text color={textColorSecondary} fontSize="sm">
+              of 36 total
+            </Text>
+          </VStack>
+        </SimpleGrid>
+        
+        <VStack spacing="4" align="stretch" mb="30px">
+          <HStack justify="space-between">
+            <Text color={textColorSecondary} fontSize="sm">
+              <Text as="span" fontWeight="bold">Loan Type:</Text> Green Energy Investment
+            </Text>
+            <Text color={textColorSecondary} fontSize="sm">
+              <Text as="span" fontWeight="bold">Start Date:</Text> 2022-01-15
+            </Text>
+          </HStack>
+        </VStack>
+        
+        <HStack spacing="3" justify="center">
+          <Button
+            leftIcon={<Icon as={MdPayment} />}
+            colorScheme="green"
+            size="md"
+          >
+            $ Make Payment
+          </Button>
+          <Button
+            leftIcon={<Icon as={MdRefresh} />}
+            colorScheme="gray"
+            variant="outline"
+            size="md"
+          >
+            Refinance
+          </Button>
+          <Button
+            leftIcon={<Icon as={MdSchedule} />}
+            colorScheme="gray"
+            variant="outline"
+            size="md"
+          >
+            Payment Schedule
+          </Button>
+        </HStack>
+      </CardBody>
+    </Card>
+  );
+};
+
+// Quick Actions Card Component
+const QuickActionsCard = () => {
+  const cardBg = useColorModeValue("white", "navy.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textColor = useColorModeValue("navy.700", "white");
+
+  return (
+    <Card bg={cardBg} borderColor={borderColor} p="30px">
+      <CardHeader>
+        <Heading size="lg" color={textColor}>
+          Quick Actions
+        </Heading>
+      </CardHeader>
+      <CardBody>
+        <HStack spacing="4" justify="center">
+          <Button
+            leftIcon={<Icon as={MdAdd} />}
+            colorScheme="green"
+            size="lg"
+            h="60px"
+            px="8"
+          >
+            + Upgrade Energy Pack
+          </Button>
+          <Button
+            leftIcon={<Icon as={MdAttachMoney} />}
+            colorScheme="green"
+            size="lg"
+            h="60px"
+            px="8"
+          >
+            Apply for New Loan
+          </Button>
+          <Button
+            leftIcon={<Icon as={MdPayment} />}
+            colorScheme="blue"
+            size="lg"
+            h="60px"
+            px="8"
+          >
+            Make Prepayment
+          </Button>
+        </HStack>
+      </CardBody>
+    </Card>
+  );
+};
+
+export default function Wallet() {
+  return (
+    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      {/* Energy Pack Card */}
+      <EnergyPackCard />
+      
+      {/* Current Loan Card */}
+      <CurrentLoanCard />
+      
+      {/* Quick Actions Card */}
+      <QuickActionsCard />
+    </Box>
+  );
+}

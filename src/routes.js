@@ -13,8 +13,8 @@ import MainDashboard from 'views/admin/default';
 
 import DataTables from 'views/admin/dataTables';
 import Profile from 'views/admin/profile';
-import RTL from 'views/admin/rtl';
 import Leaderboard from 'views/admin/leaderboard';
+import Wallet from 'views/admin/wallet';
 
 
 const routes = [
@@ -51,7 +51,7 @@ const routes = [
     layout: '/admin',
     path: '/wallet',
     icon: <Icon as={MdPublic} width="20px" height="20px" color="inherit" />,
-    component: <RTL />,
+    component: <Wallet />,
   },
 ];
 

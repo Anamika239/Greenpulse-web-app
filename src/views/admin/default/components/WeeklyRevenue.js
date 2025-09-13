@@ -12,10 +12,10 @@ import Card from "components/card/CarbonCard.js";
 import BarChart from "components/charts/BarChart";
 import React from "react";
 import {
-  barChartDataConsumption,
   barChartOptionsConsumption,
 } from "variables/charts";
 import { MdBarChart } from "react-icons/md";
+import { useCarbon } from "contexts/CarbonContext";
 
 export default function WeeklyRevenue(props) {
   const { ...rest } = props;
@@ -32,6 +32,34 @@ export default function WeeklyRevenue(props) {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
+
+  // Carbon data context
+  const { getEnergyConsumptionData } = useCarbon();
+
+  // Generate weekly energy consumption data by department
+  const weeklyEnergyData = [
+    {
+      name: "Computer Science Dept",
+      data: [180, 165, 195, 175, 185, 190, 170]
+    },
+    {
+      name: "Engineering Dept", 
+      data: [220, 200, 240, 210, 225, 235, 205]
+    },
+    {
+      name: "Medical School",
+      data: [200, 185, 215, 195, 205, 210, 190]
+    },
+    {
+      name: "Science Lab Complex",
+      data: [250, 230, 270, 245, 255, 265, 235]
+    },
+    {
+      name: "Business School",
+      data: [150, 140, 165, 155, 160, 165, 145]
+    }
+  ];
+
   return (
     <Card align='center' direction='column' w='100%' {...rest}>
       <Flex align='center' w='100%' px='15px' py='10px'>
@@ -41,7 +69,7 @@ export default function WeeklyRevenue(props) {
           fontSize='xl'
           fontWeight='700'
           lineHeight='100%'>
-          Weekly Revenue
+          Weekly Energy Consumption
         </Text>
         <Button
           align='center'
@@ -61,8 +89,14 @@ export default function WeeklyRevenue(props) {
 
       <Box h='240px' mt='auto'>
         <BarChart
-          chartData={barChartDataConsumption}
-          chartOptions={barChartOptionsConsumption}
+          chartData={weeklyEnergyData}
+          chartOptions={{
+            ...barChartOptionsConsumption,
+            xaxis: {
+              ...barChartOptionsConsumption.xaxis,
+              categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            }
+          }}
         />
       </Box>
     </Card>

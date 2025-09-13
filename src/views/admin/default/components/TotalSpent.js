@@ -16,7 +16,6 @@ import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
 import {
-  lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
 } from "variables/charts";
 import { useCarbon } from "contexts/CarbonContext";
@@ -42,6 +41,12 @@ export default function TotalSpent(props) {
   // Carbon data context
   const { getEnergyConsumptionData } = useCarbon();
   const energyData = getEnergyConsumptionData();
+  
+  // Calculate efficiency trend
+  const currentEfficiency = energyData.efficiency[energyData.efficiency.length - 1];
+  const previousEfficiency = energyData.efficiency[energyData.efficiency.length - 2];
+  const efficiencyChange = ((currentEfficiency - previousEfficiency) / previousEfficiency * 100).toFixed(1);
+  
   return (
     <Card
       justifyContent='center'
@@ -102,23 +107,32 @@ export default function TotalSpent(props) {
               Energy Consumption
             </Text>
             <Flex align='center'>
-              <Icon as={RiArrowUpSFill} color='green.500' me='2px' mt='2px' />
-              <Text color='green.500' fontSize='sm' fontWeight='700'>
-                -5.2%
+              <Icon as={RiArrowUpSFill} color={efficiencyChange >= 0 ? 'green.500' : 'red.500'} me='2px' mt='2px' />
+              <Text color={efficiencyChange >= 0 ? 'green.500' : 'red.500'} fontSize='sm' fontWeight='700'>
+                {efficiencyChange >= 0 ? '+' : ''}{efficiencyChange}%
               </Text>
             </Flex>
           </Flex>
 
           <Flex align='center'>
-            <Icon as={IoCheckmarkCircle} color='green.500' me='4px' />
-            <Text color='green.500' fontSize='md' fontWeight='700'>
-              Efficient
+            <Icon as={IoCheckmarkCircle} color={currentEfficiency >= 85 ? 'green.500' : currentEfficiency >= 70 ? 'orange.500' : 'red.500'} me='4px' />
+            <Text color={currentEfficiency >= 85 ? 'green.500' : currentEfficiency >= 70 ? 'orange.500' : 'red.500'} fontSize='md' fontWeight='700'>
+              {currentEfficiency >= 85 ? 'Efficient' : currentEfficiency >= 70 ? 'Moderate' : 'Needs Improvement'}
             </Text>
           </Flex>
         </Flex>
         <Box minH='260px' minW='75%' mt='auto'>
           <LineChart
-            chartData={lineChartDataTotalSpent}
+            chartData={[
+              {
+                name: "Energy Consumption (kWh)",
+                data: energyData.monthly
+              },
+              {
+                name: "Energy Efficiency (%)",
+                data: energyData.efficiency
+              }
+            ]}
             chartOptions={lineChartOptionsTotalSpent}
           />
         </Box>

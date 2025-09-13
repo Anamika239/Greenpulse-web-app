@@ -30,6 +30,8 @@ export const CarbonProvider = ({ children }) => {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
+      // Add a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500));
       const data = carbonDataService.getDashboardData();
       setDashboardData(data);
       setError(null);

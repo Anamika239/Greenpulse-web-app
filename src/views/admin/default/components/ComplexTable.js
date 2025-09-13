@@ -25,6 +25,7 @@ import Card from 'components/card/CarbonCard';
 import Menu from 'components/menu/MainMenu';
 import * as React from 'react';
 import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
+import { useCarbon } from 'contexts/CarbonContext';
 
 const columnHelper = createColumnHelper();
 
@@ -33,112 +34,136 @@ export default function CarbonComplexTable(props) {
   const [sorting, setSorting] = React.useState([]);
   const textColor = useColorModeValue('green.900', 'white');
   const borderColor = useColorModeValue('green.200', 'whiteAlpha.100');
-  let defaultData = tableData;
+  
+  // Get transaction data from carbon context
+  const { dashboardData } = useCarbon();
+  const transactions = dashboardData?.transactions || [];
+  
+  // Convert transactions to table format
+  const defaultData = transactions.map(tx => ({
+    type: tx.type,
+    amount: tx.amount,
+    txHash: tx.blockchainTxHash || `0x${Math.random().toString(16).substr(2, 64)}`,
+    timestamp: tx.timestamp,
+    description: tx.description,
+    building: tx.building || 'N/A'
+  }));
 
   const columns = [
-    columnHelper.accessor('name', {
-      id: 'name',
+    columnHelper.accessor('type', {
+      id: 'type',
       header: () => (
         <Text
           justifyContent="space-between"
           align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
+          fontSize={{ sm: '9px', lg: '11px' }}
           color="green.400"
+          fontWeight="600"
         >
-          INITIATIVE
-        </Text>
-      ),
-      cell: (info) => (
-        <Flex align="center">
-          <Text color={textColor} fontSize="sm" fontWeight="700">
-            {info.getValue()}
-          </Text>
-        </Flex>
-      ),
-    }),
-    columnHelper.accessor('status', {
-      id: 'status',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="green.400"
-        >
-          VERIFICATION STATUS
+          TRANSACTION TYPE
         </Text>
       ),
       cell: (info) => (
         <Flex align="center">
           <Icon
-            w="24px"
-            h="24px"
-            me="5px"
+            w="16px"
+            h="16px"
+            me="6px"
             color={
-              info.getValue() === 'Certified'
-                ? 'green.500'
-                : info.getValue() === 'Rejected'
+              info.getValue() === 'energy_consumption'
                 ? 'red.500'
-                : info.getValue() === 'Pending'
-                ? 'orange.500'
-                : null
+                : info.getValue() === 'carbon_offset_purchase'
+                ? 'green.500'
+                : info.getValue() === 'credit'
+                ? 'blue.500'
+                : 'gray.500'
             }
             as={
-              info.getValue() === 'Certified'
-                ? MdCheckCircle
-                : info.getValue() === 'Rejected'
+              info.getValue() === 'energy_consumption'
                 ? MdCancel
-                : info.getValue() === 'Pending'
-                ? MdOutlineError
-                : null
+                : info.getValue() === 'carbon_offset_purchase'
+                ? MdCheckCircle
+                : MdOutlineError
             }
           />
-          <Text color={textColor} fontSize="sm" fontWeight="700">
-            {info.getValue()}
+          <Text color={textColor} fontSize="xs" fontWeight="600" noOfLines={1}>
+            {info.getValue().replace('_', ' ').toUpperCase()}
           </Text>
         </Flex>
       ),
     }),
-    columnHelper.accessor('date', {
-      id: 'date',
+    columnHelper.accessor('amount', {
+      id: 'amount',
       header: () => (
         <Text
           justifyContent="space-between"
           align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
+          fontSize={{ sm: '9px', lg: '11px' }}
           color="green.400"
+          fontWeight="600"
         >
-          AUDIT DATE
+          AMOUNT (ENTO)
         </Text>
       ),
       cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue()}
+        <Text 
+          color={info.row.original.type === 'credit' ? 'green.500' : 'red.500'} 
+          fontSize="xs" 
+          fontWeight="600" 
+          textAlign="right"
+        >
+          {info.row.original.type === 'credit' ? '+' : '-'}{info.getValue()}
         </Text>
       ),
     }),
-    columnHelper.accessor('progress', {
-      id: 'progress',
+    columnHelper.accessor('txHash', {
+      id: 'txHash',
       header: () => (
         <Text
           justifyContent="space-between"
           align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
+          fontSize={{ sm: '9px', lg: '11px' }}
           color="green.400"
+          fontWeight="600"
         >
-          IMPLEMENTATION (%) 
+          TX HASH
         </Text>
       ),
       cell: (info) => (
-        <Flex align="center">
-          <Progress
-            variant="table"
-            colorScheme="green"
-            h="8px"
-            w="108px"
-            value={info.getValue()}
-          />
-        </Flex>
+        <Text 
+          color="blue.500" 
+          fontSize="xs" 
+          fontWeight="600" 
+          fontFamily="mono"
+          cursor="pointer"
+          _hover={{ textDecoration: 'underline' }}
+          onClick={() => {
+            // Copy to clipboard or open in blockchain explorer
+            navigator.clipboard.writeText(info.getValue());
+            alert('Transaction hash copied to clipboard!');
+          }}
+        >
+          {info.getValue().substring(0, 8)}...{info.getValue().substring(56)}
+        </Text>
+      ),
+    }),
+    columnHelper.accessor('timestamp', {
+      id: 'timestamp',
+      header: () => (
+        <Text
+          justifyContent="space-between"
+          align="center"
+          fontSize={{ sm: '9px', lg: '11px' }}
+          color="green.400"
+          fontWeight="600"
+        >
+          TIMESTAMP
+        </Text>
+      ),
+      cell: (info) => (
+        <Text color={textColor} fontSize="xs" fontWeight="600">
+          {new Date(info.getValue()).toLocaleDateString()}
+        </Text>
       ),
     }),
   ];
@@ -161,19 +186,19 @@ export default function CarbonComplexTable(props) {
       px="0px"
       overflowX={{ sm: 'scroll', lg: 'hidden' }}
     >
-      <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
+      <Flex px="20px" mb="6px" justifyContent="space-between" align="center">
         <Text
           color={textColor}
-          fontSize="22px"
+          fontSize="18px"
           fontWeight="700"
           lineHeight="100%"
         >
-          Carbon Status
+          Emission Data - Wallet Ledger
         </Text>
         <Menu />
       </Flex>
       <Box>
-        <Table variant="simple" color="green.500" mb="24px" mt="12px">
+        <Table variant="simple" color="green.500" mb="16px" mt="8px" size="sm">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
@@ -182,7 +207,8 @@ export default function CarbonComplexTable(props) {
                     <Th
                       key={header.id}
                       colSpan={header.colSpan}
-                      pe="10px"
+                      pe="8px"
+                      py="8px"
                       borderColor={borderColor}
                       cursor="pointer"
                       onClick={header.column.getToggleSortingHandler()}
@@ -190,7 +216,7 @@ export default function CarbonComplexTable(props) {
                       <Flex
                         justifyContent="space-between"
                         align="center"
-                        fontSize={{ sm: '10px', lg: '12px' }}
+                        fontSize={{ sm: '9px', lg: '11px' }}
                         color="green.400"
                       >
                         {flexRender(
@@ -219,8 +245,10 @@ export default function CarbonComplexTable(props) {
                       return (
                         <Td
                           key={cell.id}
-                          fontSize={{ sm: '14px' }}
-                          minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                          fontSize={{ sm: '12px' }}
+                          py="8px"
+                          px="12px"
+                          minW={{ sm: '80px', md: '100px', lg: 'auto' }}
                           borderColor="transparent"
                         >
                           {flexRender(

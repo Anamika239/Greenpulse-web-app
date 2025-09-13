@@ -191,12 +191,12 @@ export const barChartOptionsConsumption = {
   },
   fill: {
     type: "solid",
-    colors: ["#5E37FF", "#6AD2FF", "#E1E9F8"],
+    colors: ["#4318FF", "#6AD2FF", "#4CAF50", "#FF9800", "#9C27B0"],
   },
   legend: {
     show: false,
   },
-  colors: ["#5E37FF", "#6AD2FF", "#E1E9F8"],
+  colors: ["#4318FF", "#6AD2FF", "#4CAF50", "#FF9800", "#9C27B0"],
   dataLabels: {
     enabled: false,
   },
@@ -209,8 +209,8 @@ export const barChartOptionsConsumption = {
 };
 
 export const pieChartOptions = {
-  labels: ["Building A", "Building B", "Building C", "Building D"],
-  colors: ["#4318FF", "#6AD2FF", "#EFF4FB", "#FF6B6B"],
+  labels: ["Computer Science Dept", "Engineering Dept", "Business School", "Medical School", "Arts & Humanities", "Science Lab Complex", "Library & Research Center", "Student Dormitories", "Administrative Building", "Sports Complex"],
+  colors: ["#4318FF", "#6AD2FF", "#EFF4FB", "#FF6B6B", "#4CAF50", "#FF9800", "#9C27B0", "#F44336", "#00BCD4", "#795548"],
   chart: {
     width: "50px",
   },
