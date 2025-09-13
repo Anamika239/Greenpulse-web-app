@@ -48,7 +48,7 @@ const routes = [
     component: <SignInCentered />,
   },
   {
-    name: 'RTL Carbon',
+    name: 'Wallet',
     layout: '/rtl',
     path: '/rtl-dashboard',
     icon: <Icon as={MdPublic} width="20px" height="20px" color="inherit" />,
