@@ -86,7 +86,7 @@ export default function TotalSpent(props) {
             textAlign='start'
             fontWeight='700'
             lineHeight='100%'>
-            $37.5K
+            2,847 kWh
           </Text>
           <Flex align='center' mb='20px'>
             <Text
@@ -95,12 +95,12 @@ export default function TotalSpent(props) {
               fontWeight='500'
               mt='4px'
               me='12px'>
-              Total Spent
+              Energy Consumption
             </Text>
             <Flex align='center'>
               <Icon as={RiArrowUpSFill} color='green.500' me='2px' mt='2px' />
               <Text color='green.500' fontSize='sm' fontWeight='700'>
-                +2.45%
+                -5.2%
               </Text>
             </Flex>
           </Flex>
@@ -108,7 +108,7 @@ export default function TotalSpent(props) {
           <Flex align='center'>
             <Icon as={IoCheckmarkCircle} color='green.500' me='4px' />
             <Text color='green.500' fontSize='md' fontWeight='700'>
-              On track
+              Efficient
             </Text>
           </Flex>
         </Flex>

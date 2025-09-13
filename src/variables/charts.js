@@ -209,8 +209,8 @@ export const barChartOptionsConsumption = {
 };
 
 export const pieChartOptions = {
-  labels: ["Department A", "Department B", "Others"],
-  colors: ["#4318FF", "#6AD2FF", "#EFF4FB"],
+  labels: ["Building A", "Building B", "Building C", "Building D"],
+  colors: ["#4318FF", "#6AD2FF", "#EFF4FB", "#FF6B6B"],
   chart: {
     width: "50px",
   },
@@ -239,7 +239,7 @@ export const pieChartOptions = {
     },
   },
   fill: {
-    colors: ["#4318FF", "#6AD2FF", "#EFF4FB"],
+    colors: ["#4318FF", "#6AD2FF", "#EFF4FB", "#FF6B6B"],
   },
   tooltip: {
     enabled: true,
@@ -247,18 +247,18 @@ export const pieChartOptions = {
   },
 };
 
-export const pieChartData = [63, 25, 12];
+export const pieChartData = [35, 28, 22, 15];
 
 // Total Spent Default
 
 export const lineChartDataTotalSpent = [
   {
-    name: "Ento lost",
-    data: [50, 64, 48, 66, 49, 68],
+    name: "Energy Consumption (kWh)",
+    data: [2850, 3200, 2800, 3100, 2900, 2847],
   },
   {
-    name: "Ento gained",
-    data: [30, 40, 24, 46, 20, 46],
+    name: "Energy Efficiency (%)",
+    data: [85, 88, 82, 90, 87, 92],
   },
 ];
 

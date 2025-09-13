@@ -3,7 +3,6 @@ import { Icon } from '@chakra-ui/react';
 import {
   MdBarChart,
   MdPerson,
-  MdLock,
   MdForest,
   MdPublic,
 } from 'react-icons/md';
@@ -15,8 +14,6 @@ import DataTables from 'views/admin/dataTables';
 import Profile from 'views/admin/profile';
 import RTL from 'views/admin/rtl';
 
-// Auth Imports
-import SignInCentered from 'views/auth/signIn';
 
 const routes = [
   {
@@ -39,13 +36,6 @@ const routes = [
     path: '/profile',
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: <Profile />,
-  },
-  {
-    name: 'Sign In',
-    layout: '/auth',
-    path: '/sign-in',
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-    component: <SignInCentered />,
   },
   {
     name: 'Wallet',

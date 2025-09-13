@@ -125,7 +125,7 @@ export default function CarbonDeptDashboard() {
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <TotalSpent title="Total Carbon Spent" />
+        <TotalSpent title="Energy Consumption" />
         <WeeklyRevenue title="Weekly Carbon Revenue" />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
@@ -136,7 +136,7 @@ export default function CarbonDeptDashboard() {
         />
         <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
           <DailyTraffic title="Departmental Footprint Traffic" />
-          <PieCard title="Emission Sources Split" />
+          <PieCard title="Building Energy Usage" />
         </SimpleGrid>
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">

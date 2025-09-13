@@ -47,9 +47,6 @@ function AuthIllustration(props) {
               w='8px'
               color='secondaryGray.600'
             />
-            <Text ms='0px' fontSize='sm' color='secondaryGray.600'>
-              Back to Simmmple
-            </Text>
           </Flex>
         </NavLink>
         {children}

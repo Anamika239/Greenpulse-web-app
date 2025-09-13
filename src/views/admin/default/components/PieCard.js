@@ -26,7 +26,7 @@ export default function Conversion(props) {
         w='100%'
         mb='8px'>
         <Text color={textColor} fontSize='md' fontWeight='600' mt='4px'>
-          Your Pie Chart
+          Building Energy Usage
         </Text>
         <Select
           fontSize='sm'
@@ -48,43 +48,74 @@ export default function Conversion(props) {
       />
       <Card
         bg={cardColor}
-        flexDirection='row'
+        flexDirection='column'
         boxShadow={cardShadow}
         w='100%'
         p='15px'
         px='20px'
         mt='15px'
         mx='auto'>
-        <Flex direction='column' py='5px'>
-          <Flex align='center'>
-            <Box h='8px' w='8px' bg='brand.500' borderRadius='50%' me='4px' />
-            <Text
-              fontSize='xs'
-              color='secondaryGray.600'
-              fontWeight='700'
-              mb='5px'>
-              Your files
+        <Flex direction='row' wrap='wrap' justify='space-between' align='center'>
+          <Flex direction='column' py='5px' minW='120px'>
+            <Flex align='center'>
+              <Box h='8px' w='8px' bg='brand.500' borderRadius='50%' me='4px' />
+              <Text
+                fontSize='xs'
+                color='secondaryGray.600'
+                fontWeight='700'
+                mb='5px'>
+                Building A
+              </Text>
+            </Flex>
+            <Text fontSize='lg' color={textColor} fontWeight='700'>
+              35%
             </Text>
           </Flex>
-          <Text fontSize='lg' color={textColor} fontWeight='700'>
-            63%
-          </Text>
-        </Flex>
-        <VSeparator mx={{ base: "60px", xl: "60px", "2xl": "60px" }} />
-        <Flex direction='column' py='5px' me='10px'>
-          <Flex align='center'>
-            <Box h='8px' w='8px' bg='#6AD2FF' borderRadius='50%' me='4px' />
-            <Text
-              fontSize='xs'
-              color='secondaryGray.600'
-              fontWeight='700'
-              mb='5px'>
-              System
+          <Flex direction='column' py='5px' minW='120px'>
+            <Flex align='center'>
+              <Box h='8px' w='8px' bg='#6AD2FF' borderRadius='50%' me='4px' />
+              <Text
+                fontSize='xs'
+                color='secondaryGray.600'
+                fontWeight='700'
+                mb='5px'>
+                Building B
+              </Text>
+            </Flex>
+            <Text fontSize='lg' color={textColor} fontWeight='700'>
+              28%
             </Text>
           </Flex>
-          <Text fontSize='lg' color={textColor} fontWeight='700'>
-            25%
-          </Text>
+          <Flex direction='column' py='5px' minW='120px'>
+            <Flex align='center'>
+              <Box h='8px' w='8px' bg='#EFF4FB' borderRadius='50%' me='4px' />
+              <Text
+                fontSize='xs'
+                color='secondaryGray.600'
+                fontWeight='700'
+                mb='5px'>
+                Building C
+              </Text>
+            </Flex>
+            <Text fontSize='lg' color={textColor} fontWeight='700'>
+              22%
+            </Text>
+          </Flex>
+          <Flex direction='column' py='5px' minW='120px'>
+            <Flex align='center'>
+              <Box h='8px' w='8px' bg='#FF6B6B' borderRadius='50%' me='4px' />
+              <Text
+                fontSize='xs'
+                color='secondaryGray.600'
+                fontWeight='700'
+                mb='5px'>
+                Building D
+              </Text>
+            </Flex>
+            <Text fontSize='lg' color={textColor} fontWeight='700'>
+              15%
+            </Text>
+          </Flex>
         </Flex>
       </Card>
     </Card>
