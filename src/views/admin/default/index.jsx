@@ -3,16 +3,14 @@
 */
 
 import {
-  Avatar,
   Box,
   Flex,
-  FormLabel,
   Icon,
   Select,
   SimpleGrid,
   useColorModeValue,
 } from "@chakra-ui/react";
-import Earth from "assets/img/dashboards/usa.png"; // Could represent carbon market or simply keep as is
+// import Earth from "assets/img/dashboards/usa.png"; // Could represent carbon market or simply keep as is
 import MiniCalendar from "components/calendar/MiniCalendar";
 import CarbonMiniStats from "components/card/CarbonMiniStats";
 import IconBox from "components/icons/IconBox";

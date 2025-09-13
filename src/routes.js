@@ -3,10 +3,8 @@ import { Icon } from '@chakra-ui/react';
 import {
   MdBarChart,
   MdPerson,
-  MdHome,
   MdLock,
   MdForest,
-  MdShoppingCart,
   MdPublic,
 } from 'react-icons/md';
 

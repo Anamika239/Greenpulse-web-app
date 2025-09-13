@@ -2,10 +2,10 @@ import React from "react";
 import { Box, Grid } from "@chakra-ui/react";
 import Banner from "views/admin/profile/components/Banner";
 import Storage from "views/admin/profile/components/Storage";
-import Leaderboard from "views/admin/components/leaderboard";
+import Leaderboard from "views/admin/profile/components/leaderboard";
 // Assets
 import banner from "assets/img/auth/banner.png";
-import avatar from "assets/img/avatars/avatar4.png";
+import avatar from "assets/img/avatars/avatarSimmmple.png";
 
 // Sample leaderboard data array
 const leaderboardData = [
